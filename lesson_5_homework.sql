@@ -1,8 +1,8 @@
---схема БД: https://docs.google.com/document/d/1NVORWgdwlKepKq_b8SPRaSpraltxoMg2SIusTEN6mEQ/edit?usp=sharing
+--Г±ГµГҐГ¬Г  ГЃГ„: https://docs.google.com/document/d/1NVORWgdwlKepKq_b8SPRaSpraltxoMg2SIusTEN6mEQ/edit?usp=sharing
 --colab/jupyter: https://colab.research.google.com/drive/1j4XdGIU__NYPVpv74vQa9HUOAkxsgUez?usp=sharing
 
 --task1 (lesson5)
--- Компьютерная фирма: Сделать view (pages_all_products), в которой будет постраничная разбивка всех продуктов (не более двух продуктов на одной странице). Вывод: все данные из laptop, номер страницы, список всех страниц
+-- ГЉГ®Г¬ГЇГјГѕГІГҐГ°Г­Г Гї ГґГЁГ°Г¬Г : Г‘Г¤ГҐГ«Г ГІГј view (pages_all_products), Гў ГЄГ®ГІГ®Г°Г®Г© ГЎГіГ¤ГҐГІ ГЇГ®Г±ГІГ°Г Г­ГЁГ·Г­Г Гї Г°Г Г§ГЎГЁГўГЄГ  ГўГ±ГҐГµ ГЇГ°Г®Г¤ГіГЄГІГ®Гў (Г­ГҐ ГЎГ®Г«ГҐГҐ Г¤ГўГіГµ ГЇГ°Г®Г¤ГіГЄГІГ®Гў Г­Г  Г®Г¤Г­Г®Г© Г±ГІГ°Г Г­ГЁГ¶ГҐ). Г‚Г»ГўГ®Г¤: ГўГ±ГҐ Г¤Г Г­Г­Г»ГҐ ГЁГ§ laptop, Г­Г®Г¬ГҐГ° Г±ГІГ°Г Г­ГЁГ¶Г», Г±ГЇГЁГ±Г®ГЄ ГўГ±ГҐГµ Г±ГІГ°Г Г­ГЁГ¶
 
 sample:
 1 1
@@ -12,7 +12,7 @@ sample:
 1 3
 2 3
 
-
+create view pages_all_products as
 select code, model, speed, ram, hd, price, screen,page_num,
 row_number () over (partition by page_num) as row_num
 from (
@@ -26,7 +26,7 @@ SELECT *,
 
 
 --task2 (lesson5)
--- Компьютерная фирма: Сделать view (distribution_by_type), в рамках которого будет процентное соотношение всех товаров по типу устройства. Вывод: производитель, тип, процент (%)
+-- ГЉГ®Г¬ГЇГјГѕГІГҐГ°Г­Г Гї ГґГЁГ°Г¬Г : Г‘Г¤ГҐГ«Г ГІГј view (distribution_by_type), Гў Г°Г Г¬ГЄГ Гµ ГЄГ®ГІГ®Г°Г®ГЈГ® ГЎГіГ¤ГҐГІ ГЇГ°Г®Г¶ГҐГ­ГІГ­Г®ГҐ Г±Г®Г®ГІГ­Г®ГёГҐГ­ГЁГҐ ГўГ±ГҐГµ ГІГ®ГўГ Г°Г®Гў ГЇГ® ГІГЁГЇГі ГіГ±ГІГ°Г®Г©Г±ГІГўГ . Г‚Г»ГўГ®Г¤: ГЇГ°Г®ГЁГ§ГўГ®Г¤ГЁГІГҐГ«Гј, ГІГЁГЇ, ГЇГ°Г®Г¶ГҐГ­ГІ (%)
 create view distribution_by_type as
 select distinct maker, type, 
 max_rn/sum(max_rn) over (partition by maker) as "perc"
@@ -46,7 +46,7 @@ order by maker, type;
 
 
 --task3 (lesson5)
--- Компьютерная фирма: Сделать на базе предыдущенр view график - круговую диаграмму. Пример https://plotly.com/python/histograms/
+-- ГЉГ®Г¬ГЇГјГѕГІГҐГ°Г­Г Гї ГґГЁГ°Г¬Г : Г‘Г¤ГҐГ«Г ГІГј Г­Г  ГЎГ Г§ГҐ ГЇГ°ГҐГ¤Г»Г¤ГіГ№ГҐГ­Г° view ГЈГ°Г ГґГЁГЄ - ГЄГ°ГіГЈГ®ГўГіГѕ Г¤ГЁГ ГЈГ°Г Г¬Г¬Гі. ГЏГ°ГЁГ¬ГҐГ° https://plotly.com/python/histograms/
 request = """
 select  concat (maker, '_', type) as "maker_type", perc from distribution_by_type
 """
@@ -55,21 +55,21 @@ fig = px.pie(values=df.perc, names=df.maker_type)
 fig.show()
 
 --task4 (lesson5)
--- Корабли: Сделать копию таблицы ships (ships_two_words), но название корабля должно состоять из двух слов
+-- ГЉГ®Г°Г ГЎГ«ГЁ: Г‘Г¤ГҐГ«Г ГІГј ГЄГ®ГЇГЁГѕ ГІГ ГЎГ«ГЁГ¶Г» ships (ships_two_words), Г­Г® Г­Г Г§ГўГ Г­ГЁГҐ ГЄГ®Г°Г ГЎГ«Гї Г¤Г®Г«Г¦Г­Г® Г±Г®Г±ГІГ®ГїГІГј ГЁГ§ Г¤ГўГіГµ Г±Г«Г®Гў
 create table ships_two_words as
 select * from ships s where name like '% %';
 
 select * from ships_two_words
 
 --task5 (lesson5)
--- Корабли: Вывести список кораблей, у которых class отсутствует (IS NULL) и название начинается с буквы "S"
+-- ГЉГ®Г°Г ГЎГ«ГЁ: Г‚Г»ГўГҐГ±ГІГЁ Г±ГЇГЁГ±Г®ГЄ ГЄГ®Г°Г ГЎГ«ГҐГ©, Гі ГЄГ®ГІГ®Г°Г»Гµ class Г®ГІГ±ГіГІГ±ГІГўГіГҐГІ (IS NULL) ГЁ Г­Г Г§ГўГ Г­ГЁГҐ Г­Г Г·ГЁГ­Г ГҐГІГ±Гї Г± ГЎГіГЄГўГ» "S"
 
 select * from ships 
 where name like 'S%'
 and class is NULL
 
 --task6 (lesson5)
--- Компьютерная фирма: Вывести все принтеры производителя = 'A' со стоимостью выше средней по принтерам производителя = 'C' и три самых дорогих (через оконные функции). Вывести model
+-- ГЉГ®Г¬ГЇГјГѕГІГҐГ°Г­Г Гї ГґГЁГ°Г¬Г : Г‚Г»ГўГҐГ±ГІГЁ ГўГ±ГҐ ГЇГ°ГЁГ­ГІГҐГ°Г» ГЇГ°Г®ГЁГ§ГўГ®Г¤ГЁГІГҐГ«Гї = 'A' Г±Г® Г±ГІГ®ГЁГ¬Г®Г±ГІГјГѕ ГўГ»ГёГҐ Г±Г°ГҐГ¤Г­ГҐГ© ГЇГ® ГЇГ°ГЁГ­ГІГҐГ°Г Г¬ ГЇГ°Г®ГЁГ§ГўГ®Г¤ГЁГІГҐГ«Гї = 'C' ГЁ ГІГ°ГЁ Г±Г Г¬Г»Гµ Г¤Г®Г°Г®ГЈГЁГµ (Г·ГҐГ°ГҐГ§ Г®ГЄГ®Г­Г­Г»ГҐ ГґГіГ­ГЄГ¶ГЁГЁ). Г‚Г»ГўГҐГ±ГІГЁ model
 
 with printer_upd as 
 (
